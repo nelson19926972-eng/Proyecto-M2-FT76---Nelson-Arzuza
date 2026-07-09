@@ -9,8 +9,8 @@ const startServer = async () => {
     await pool.query('SELECT 1')
     console.log('Conexión a la base de datos establecida correctamente')
 
-    server.listen(3000, () => {
-    console.log('Servidor escuchando en el puerto 3000')
+    server.listen(process.env.PORT, () => {
+    console.log('Servidor escuchando en el puerto ' + process.env.PORT)
 })
 
 }
