@@ -38,14 +38,22 @@ INSERT INTO authors (name, email, bio) VALUES
  ('María López', 'maria@example.com', 'Ingeniera de software con foco en APIs REST')
 ON CONFLICT (email) DO NOTHING;
  
-INSERT INTO posts (title, content, author_id, published) VALUES
+INSERT INTO posts (title, content, author_id, published)
+SELECT 'Introducción a Node.js', 'Node.js es un runtime de JavaScript...', 1, true
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE title = 'Introducción a Node.js');
 
- ('Introducción a Node.js', 'Node.js es un runtime de JavaScript...', 1, true),
+INSERT INTO posts (title, content, author_id, published)
+SELECT 'PostgreSQL vs MySQL', 'Ambas bases de datos tienen ventajas...', 2, true
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE title = 'PostgreSQL vs MySQL');
 
- ('PostgreSQL vs MySQL', 'Ambas bases de datos tienen ventajas...', 2, true),
+INSERT INTO posts (title, content, author_id, published)
+SELECT 'APIs RESTful', 'REST es un estilo arquitectónico...', 1, true
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE title = 'APIs RESTful');
 
- ('APIs RESTful', 'REST es un estilo arquitectónico...', 1, true),
+INSERT INTO posts (title, content, author_id, published)
+SELECT 'Manejo de errores en Express', 'El manejo apropiado de errores...', 3, false
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE title = 'Manejo de errores en Express');
 
- ('Manejo de errores en Express', 'El manejo apropiado de errores...', 3, false),
-
- ('Async/Await explicado', 'Las promesas simplifican el código asíncrono...', 1, false);
+INSERT INTO posts (title, content, author_id, published)
+SELECT 'Async/Await explicado', 'Las promesas simplifican el código asíncrono...', 1, false
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE title = 'Async/Await explicado');
