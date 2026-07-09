@@ -18,8 +18,40 @@ const postAuthorsService = async (authorData) => {
     return rows[0];
 };
 
+const putAuthorsService = async (id, authorData) => {
+    const fields = [];
+    const values = [];
+
+    if (authorData.name !== undefined) {
+        fields.push('name = $' + (fields.length + 1));
+        values.push(authorData.name);
+    }
+
+    if (authorData.email !== undefined) {
+        fields.push('email = $' + (fields.length + 1));
+        values.push(authorData.email);
+    }
+
+    if (authorData.bio !== undefined) {
+        fields.push('bio = $' + (fields.length + 1));
+        values.push(authorData.bio);
+    }
+
+    if (fields.length === 0) {
+        return null;
+    }
+
+    values.push(id);
+    const { rows } = await pool.query(
+        `UPDATE authors SET ${fields.join(', ')} WHERE id = $${values.length} RETURNING *`,
+        values
+    );
+    return rows[0];
+};
+
 module.exports = {
   getAuthorsService,
   getAuthorsByIdService,
-  postAuthorsService
+  postAuthorsService,
+  putAuthorsService
 };

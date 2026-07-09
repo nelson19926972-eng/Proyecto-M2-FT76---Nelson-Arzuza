@@ -1,4 +1,4 @@
-const { getAuthorsService, getAuthorsByIdService, postAuthorsService } = require("../services/authors_services");
+const { getAuthorsService, getAuthorsByIdService, postAuthorsService, putAuthorsService } = require("../services/authors_services");
 
 
 const getAuthorsController = async (req, res) => {
@@ -37,8 +37,24 @@ const postAuthorsController = async (req, res) => {
     }
 };
 
+const putAuthorsController = async (req, res) => {
+    const authorId = req.params.id;
+    try {
+        const updatedAuthor = await putAuthorsService(authorId, req.body);
+        if (updatedAuthor) {
+            res.json(updatedAuthor);
+        } else {
+            res.status(404).json({ error: 'Autor no encontrado' });
+        }
+    } catch (error) {
+        console.error('Error al actualizar el autor:', error);
+        res.status(500).json({ error: 'Error al actualizar el autor' });
+    }
+};
+
 module.exports = {
     getAuthorsController,
     getAuthorsByIdController,
-    postAuthorsController
+    postAuthorsController,
+    putAuthorsController
 };
