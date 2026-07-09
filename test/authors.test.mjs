@@ -1,20 +1,20 @@
-const { beforeEach, describe, expect, it, vi } = require('vitest');
-const request = require('supertest');
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import request from 'supertest';
+import { createRequire } from 'node:module';
 
-vi.mock('../src/services/authors_services', () => ({
-  getAuthorsService: vi.fn(),
-  getAuthorsByIdService: vi.fn(),
-  postAuthorsService: vi.fn(),
-  putAuthorsService: vi.fn(),
-  deleteAuthorsService: vi.fn()
-}));
-
+const require = createRequire(import.meta.url);
+const { pool } = require('../src/config/db_conect');
 const { server } = require('../src/server');
-const { getAuthorsService, getAuthorsByIdService, postAuthorsService } = require('../src/services/authors_services');
+
+const originalQuery = pool.query;
 
 describe('API de autores', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    pool.query = vi.fn();
+  });
+
+  afterEach(() => {
+    pool.query = originalQuery;
   });
 
   it('devuelve un mensaje de bienvenida en la ruta raíz', async () => {
@@ -28,14 +28,16 @@ describe('API de autores', () => {
     });
   });
 
-  it('obtiene la lista de autores desde el servicio', async () => {
-    getAuthorsService.mockResolvedValue([
-      { id: 1, name: 'Ana', email: 'ana@example.com', bio: 'Desarrolladora', created_at: '2024-01-01T00:00:00.000Z' }
-    ]);
+  it('obtiene la lista de autores desde la base de datos', async () => {
+    pool.query.mockResolvedValue({
+      rows: [
+        { id: 1, name: 'Ana', email: 'ana@example.com', bio: 'Desarrolladora', created_at: '2024-01-01T00:00:00.000Z' }
+      ]
+    });
 
     const response = await request(server).get('/authors');
 
-    expect(getAuthorsService).toHaveBeenCalledTimes(1);
+    expect(pool.query).toHaveBeenCalledWith('SELECT * FROM authors');
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({
       status: 200,
@@ -46,24 +48,18 @@ describe('API de autores', () => {
     });
   });
 
-  it('crea un autor correctamente cuando el servicio responde', async () => {
-    postAuthorsService.mockResolvedValue({
-      id: 2,
-      name: 'Luis',
-      email: 'luis@example.com',
-      bio: 'Analista',
-      created_at: '2024-01-02T00:00:00.000Z'
-    });
+  it('crea un autor correctamente cuando la base de datos responde', async () => {
+    pool.query
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({
+        rows: [{ id: 2, name: 'Luis', email: 'luis@example.com', bio: 'Analista', created_at: '2024-01-02T00:00:00.000Z' }]
+      });
 
     const response = await request(server)
       .post('/authors')
       .send({ name: 'Luis', email: 'luis@example.com', bio: 'Analista' });
 
-    expect(postAuthorsService).toHaveBeenCalledWith({
-      name: 'Luis',
-      email: 'luis@example.com',
-      bio: 'Analista'
-    });
+    expect(pool.query).toHaveBeenCalledTimes(2);
     expect(response.status).toBe(201);
     expect(response.body).toMatchObject({
       status: 201,
@@ -72,10 +68,8 @@ describe('API de autores', () => {
     });
   });
 
-  it('devuelve 409 cuando el servicio detecta un email duplicado', async () => {
-    const error = new Error('este email ya se encuentra en el registro');
-    error.statusCode = 409;
-    postAuthorsService.mockRejectedValue(error);
+  it('devuelve 409 cuando el email ya existe', async () => {
+    pool.query.mockResolvedValueOnce({ rows: [{ id: 1 }] });
 
     const response = await request(server)
       .post('/authors')
@@ -89,7 +83,7 @@ describe('API de autores', () => {
   });
 
   it('devuelve 404 cuando el autor no existe', async () => {
-    getAuthorsByIdService.mockResolvedValue(null);
+    pool.query.mockResolvedValue({ rows: [] });
 
     const response = await request(server).get('/authors/99');
 
