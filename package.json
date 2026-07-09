@@ -1,0 +1,23 @@
+{
+  "name": "proyecto_m2_nelson_arzuza",
+  "version": "1.0.0",
+  "description": "Proyecto modulo 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "text",
+    "dev": "node --watch index.js"
+  },
+  "keywords": [
+    "proyecto",
+    "modulo2",
+    "api",
+    "express"
+  ],
+  "author": "Nelson Arzuza",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1",
+    "pg": "^8.22.0"
+  }
+}
