@@ -40,20 +40,20 @@ ON CONFLICT (email) DO NOTHING;
  
 INSERT INTO posts (title, content, author_id, published)
 SELECT 'Introducción a Node.js', 'Node.js es un runtime de JavaScript...', 1, true
-WHERE NOT EXISTS (SELECT 1 FROM posts WHERE title = 'Introducción a Node.js');
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 1);
 
 INSERT INTO posts (title, content, author_id, published)
 SELECT 'PostgreSQL vs MySQL', 'Ambas bases de datos tienen ventajas...', 2, true
-WHERE NOT EXISTS (SELECT 1 FROM posts WHERE title = 'PostgreSQL vs MySQL');
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 2);
 
 INSERT INTO posts (title, content, author_id, published)
 SELECT 'APIs RESTful', 'REST es un estilo arquitectónico...', 1, true
-WHERE NOT EXISTS (SELECT 1 FROM posts WHERE title = 'APIs RESTful');
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 3);
 
 INSERT INTO posts (title, content, author_id, published)
 SELECT 'Manejo de errores en Express', 'El manejo apropiado de errores...', 3, false
-WHERE NOT EXISTS (SELECT 1 FROM posts WHERE title = 'Manejo de errores en Express');
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 4);
 
 INSERT INTO posts (title, content, author_id, published)
 SELECT 'Async/Await explicado', 'Las promesas simplifican el código asíncrono...', 1, false
-WHERE NOT EXISTS (SELECT 1 FROM posts WHERE title = 'Async/Await explicado');
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 5);
