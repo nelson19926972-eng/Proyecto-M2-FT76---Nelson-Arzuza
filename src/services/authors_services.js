@@ -18,30 +18,36 @@ const postAuthorsService = async (authorData) => {
     return rows[0];
 };
 
-const putAuthorsService = async (id, authorData) => {
+const putAuthorsService = async (id, authorData = {}) => {
+    const authorId = Number(id ?? authorData?.id);
+
+    if (!Number.isInteger(authorId)) {
+        return null;
+    }
+
+    const existingAuthor = await pool.query('SELECT id FROM authors WHERE id = $1', [authorId]);
+    if (existingAuthor.rows.length === 0) {
+        return null;
+    }
+
+    const allowedFields = ['name', 'email', 'bio', 'created_at'];
     const fields = [];
     const values = [];
 
-    if (authorData.name !== undefined) {
-        fields.push('name = $' + (fields.length + 1));
-        values.push(authorData.name);
-    }
+    Object.entries(authorData).forEach(([key, value]) => {
+        if (key === 'id' || value === undefined || !allowedFields.includes(key)) {
+            return;
+        }
 
-    if (authorData.email !== undefined) {
-        fields.push('email = $' + (fields.length + 1));
-        values.push(authorData.email);
-    }
-
-    if (authorData.bio !== undefined) {
-        fields.push('bio = $' + (fields.length + 1));
-        values.push(authorData.bio);
-    }
+        fields.push(`${key} = $${fields.length + 1}`);
+        values.push(value);
+    });
 
     if (fields.length === 0) {
         return null;
     }
 
-    values.push(id);
+    values.push(authorId);
     const { rows } = await pool.query(
         `UPDATE authors SET ${fields.join(', ')} WHERE id = $${values.length} RETURNING *`,
         values
@@ -49,9 +55,15 @@ const putAuthorsService = async (id, authorData) => {
     return rows[0];
 };
 
+const deleteAuthorsService = async (id) => {
+    const { rowCount } = await pool.query('DELETE FROM authors WHERE id = $1', [id]);
+    return rowCount > 0;
+};
+
 module.exports = {
   getAuthorsService,
   getAuthorsByIdService,
   postAuthorsService,
-  putAuthorsService
+  putAuthorsService,
+  deleteAuthorsService
 };
