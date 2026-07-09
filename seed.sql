@@ -1,4 +1,4 @@
-CREATE TABLE authors (
+CREATE TABLE IF NOT EXISTS authors (
 
  id SERIAL PRIMARY KEY,
 
@@ -11,7 +11,7 @@ CREATE TABLE authors (
  created_at TIMESTAMPTZ DEFAULT NOW()
 
 );
-CREATE TABLE posts (
+CREATE TABLE IF NOT EXISTS posts (
 
  id SERIAL PRIMARY KEY,
 
@@ -35,7 +35,8 @@ INSERT INTO authors (name, email, bio) VALUES
 
  ('Carlos Ruiz', 'carlos@example.com', 'Escritor técnico especializado en bases de datos'),
 
- ('María López', 'maria@example.com', 'Ingeniera de software con foco en APIs REST');
+ ('María López', 'maria@example.com', 'Ingeniera de software con foco en APIs REST')
+ON CONFLICT (email) DO NOTHING;
  
 INSERT INTO posts (title, content, author_id, published) VALUES
 
