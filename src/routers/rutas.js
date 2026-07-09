@@ -2,6 +2,10 @@ const { Router } = require('express')
 const { welcomeController } = require('../controllers/bienvenida_controller')
 const { getAuthorsController, getAuthorsByIdController, postAuthorsController, putAuthorsController, deleteAuthorsController } = require('../controllers/authors_controller')
 const { getPostsController, getPostByIdController, getPostsByAuthorController, postPostController, putPostController, deletePostController } = require('../controllers/posts_controllers')
+const { validateIdParam } = require('../middlewares/get')
+const { validateAuthorBody, validatePostBody } = require('../middlewares/post')
+const { validateAuthorUpdateBody, validatePostUpdateBody } = require('../middlewares/put')
+const { validateDeleteIdParam } = require('../middlewares/delete')
 const router = Router()
 
 
@@ -9,16 +13,16 @@ router.get('/', welcomeController)
 
 
 router.get('/authors', getAuthorsController)
-router.get('/authors/:id', getAuthorsByIdController)
-router.post('/authors', postAuthorsController)
-router.put('/authors/:id', putAuthorsController)
-router.delete('/authors/:id', deleteAuthorsController)
+router.get('/authors/:id', validateIdParam('id'), getAuthorsByIdController)
+router.post('/authors', validateAuthorBody, postAuthorsController)
+router.put('/authors/:id', validateIdParam('id'), validateAuthorUpdateBody, putAuthorsController)
+router.delete('/authors/:id', validateDeleteIdParam, deleteAuthorsController)
 router.get('/posts', getPostsController)
-router.get('/posts/author/:authorId', getPostsByAuthorController)
-router.get('/posts/:id', getPostByIdController)
-router.post('/posts', postPostController)
-router.put('/posts/:id', putPostController)
-router.delete('/posts/:id', deletePostController)
+router.get('/posts/author/:authorId', validateIdParam('authorId'), getPostsByAuthorController)
+router.get('/posts/:id', validateIdParam('id'), getPostByIdController)
+router.post('/posts', validatePostBody, postPostController)
+router.put('/posts/:id', validateIdParam('id'), validatePostUpdateBody, putPostController)
+router.delete('/posts/:id', validateDeleteIdParam, deletePostController)
 
 
 module.exports = {

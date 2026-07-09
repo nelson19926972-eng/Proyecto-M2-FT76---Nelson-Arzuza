@@ -10,30 +10,40 @@ const {
 const getPostsController = async (req, res) => {
   try {
     const posts = await getPostsService();
-    res.status(200).json({ message: 'Posts obtenidos correctamente', posts });
+    res.status(200).json({ status: 200, message: 'Posts obtenidos correctamente', data: posts });
   } catch (error) {
     console.error('Error al obtener los posts:', error);
-    res.status(500).json({ error: 'Error al obtener los posts' });
+    res.status(500).json({ status: 500, message: 'Error al obtener los posts' });
   }
 };
 
 const getPostByIdController = async (req, res) => {
-  const postId = req.params.id;
+  const postId = Number(req.params.id);
+
+  if (!Number.isInteger(postId)) {
+    return res.status(400).json({ status: 400, message: 'El id del post no es válido' });
+  }
+
   try {
     const post = await getPostByIdService(postId);
     if (post) {
-      res.status(200).json({ message: 'Post encontrado', post });
+      res.status(200).json({ status: 200, message: 'Post encontrado', data: post });
     } else {
-      res.status(404).json({ error: 'Post no encontrado' });
+      res.status(404).json({ status: 404, message: 'Post no encontrado' });
     }
   } catch (error) {
     console.error('Error al obtener el post por ID:', error);
-    res.status(500).json({ error: 'Error al obtener el post por ID' });
+    res.status(500).json({ status: 500, message: 'Error al obtener el post por ID' });
   }
 };
 
 const getPostsByAuthorController = async (req, res) => {
-  const authorId = req.params.authorId;
+  const authorId = Number(req.params.authorId);
+
+  if (!Number.isInteger(authorId)) {
+    return res.status(400).json({ status: 400, message: 'El id del autor no es válido' });
+  }
+
   try {
     const posts = await getPostsByAuthorService(authorId);
     if (posts.length > 0) {
@@ -54,26 +64,34 @@ const getPostsByAuthorController = async (req, res) => {
       }));
 
       res.status(200).json({
+        status: 200,
         message: 'Posts del autor obtenidos correctamente',
-        author,
-        posts: formattedPosts
+        data: {
+          author,
+          posts: formattedPosts
+        }
       });
     } else {
-      res.status(404).json({ error: 'No se encontraron posts para este autor' });
+      res.status(404).json({ status: 404, message: 'No se encontraron posts para este autor' });
     }
   } catch (error) {
     console.error('Error al obtener los posts por autor:', error);
-    res.status(500).json({ error: 'Error al obtener los posts por autor' });
+    res.status(500).json({ status: 500, message: 'Error al obtener los posts por autor' });
   }
 };
 
 const postPostController = async (req, res) => {
   try {
     const newPost = await postPostService(req.body);
-    res.status(201).json({ message: 'Post creado correctamente', post: newPost });
+    res.status(201).json({ status: 201, message: 'Post creado correctamente', data: newPost });
   } catch (error) {
     console.error('Error al crear el post:', error);
-    res.status(500).json({ error: 'Error al crear el post' });
+
+    if (error.statusCode === 409) {
+      return res.status(409).json({ status: 409, message: error.message });
+    }
+
+    res.status(500).json({ status: 500, message: 'Error al crear el post' });
   }
 };
 
@@ -81,34 +99,39 @@ const putPostController = async (req, res) => {
   const postId = Number(req.params.id ?? req.body?.id);
 
   if (!Number.isInteger(postId)) {
-    return res.status(400).json({ error: 'El id del post no es válido' });
+    return res.status(400).json({ status: 400, message: 'El id del post no es válido' });
   }
 
   try {
     const updatedPost = await putPostService(postId, req.body);
     if (updatedPost) {
-      res.status(200).json({ message: 'Post actualizado correctamente', post: updatedPost });
+      res.status(200).json({ status: 200, message: 'Post actualizado correctamente', data: updatedPost });
     } else {
-      res.status(404).json({ error: `Post no encontrado con id ${postId}` });
+      res.status(404).json({ status: 404, message: `Post no encontrado con id ${postId}` });
     }
   } catch (error) {
     console.error('Error al actualizar el post:', error);
-    res.status(500).json({ error: 'Error al actualizar el post' });
+    res.status(500).json({ status: 500, message: 'Error al actualizar el post' });
   }
 };
 
 const deletePostController = async (req, res) => {
-  const postId = req.params.id;
+  const postId = Number(req.params.id);
+
+  if (!Number.isInteger(postId)) {
+    return res.status(400).json({ status: 400, message: 'El id del post no es válido' });
+  }
+
   try {
     const deleted = await deletePostService(postId);
     if (deleted) {
-      res.status(200).json({ message: 'Post eliminado correctamente' });
+      res.status(200).json({ status: 200, message: 'Post eliminado correctamente', data: null });
     } else {
-      res.status(404).json({ error: 'Post no encontrado' });
+      res.status(404).json({ status: 404, message: 'Post no encontrado' });
     }
   } catch (error) {
     console.error('Error al eliminar el post:', error);
-    res.status(500).json({ error: 'Error al eliminar el post' });
+    res.status(500).json({ status: 500, message: 'Error al eliminar el post' });
   }
 };
 

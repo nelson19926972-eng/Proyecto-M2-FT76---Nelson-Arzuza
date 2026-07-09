@@ -11,9 +11,20 @@ const getAuthorsByIdService = async (id) => {
 };
 
 const postAuthorsService = async (authorData) => {
+    const createdAt = authorData?.created_at && authorData.created_at !== ''
+        ? authorData.created_at
+        : new Date().toISOString();
+
+    const existingEmail = await pool.query('SELECT id FROM authors WHERE email = $1', [authorData.email]);
+    if (existingEmail.rows.length > 0) {
+        const error = new Error('este email ya se encuentra en el registro');
+        error.statusCode = 409;
+        throw error;
+    }
+
     const { rows } = await pool.query(
         'INSERT INTO authors (name, email, bio, created_at) VALUES ($1, $2, $3, $4) RETURNING *',
-        [authorData.name, authorData.email, authorData.bio, authorData.created_at]
+        [authorData.name, authorData.email, authorData.bio, createdAt]
     );
     return rows[0];
 };

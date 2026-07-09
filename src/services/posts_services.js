@@ -22,9 +22,17 @@ const getPostsByAuthorService = async (authorId) => {
 };
 
 const postPostService = async (postData) => {
+  const createdAt = postData?.created_at && postData.created_at !== ''
+    ? postData.created_at
+    : new Date().toISOString();
+
+  const published = postData?.published === undefined || postData?.published === null || postData?.published === ''
+    ? true
+    : postData.published;
+
   const { rows } = await pool.query(
     'INSERT INTO posts (title, content, author_id, published, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-    [postData.title, postData.content, postData.author_id, postData.published, postData.created_at]
+    [postData.title, postData.content, postData.author_id, published, createdAt]
   );
   return rows[0];
 };
