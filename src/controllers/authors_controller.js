@@ -1,4 +1,4 @@
-const { getAuthorsService, getAuthorsByIdService } = require("../services/authors_services");
+const { getAuthorsService, getAuthorsByIdService, postAuthorsService } = require("../services/authors_services");
 
 
 const getAuthorsController = async (req, res) => {
@@ -27,7 +27,18 @@ const getAuthorsByIdController = async (req, res) => {
     
 }
 
+const postAuthorsController = async (req, res) => {
+    try {
+        const newAuthor = await postAuthorsService(req.body);
+        res.status(201).json(newAuthor);
+    } catch (error) {
+        console.error('Error al crear el autor:', error);
+        res.status(500).json({ error: 'Error al crear el autor' });
+    }
+};
+
 module.exports = {
     getAuthorsController,
-    getAuthorsByIdController
+    getAuthorsByIdController,
+    postAuthorsController
 };

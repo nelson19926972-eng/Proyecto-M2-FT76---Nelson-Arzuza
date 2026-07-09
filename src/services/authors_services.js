@@ -10,8 +10,16 @@ const getAuthorsByIdService = async (id) => {
     return rows[0];
 };
 
+const postAuthorsService = async (authorData) => {
+    const { rows } = await pool.query(
+        'INSERT INTO authors (name, email, bio, created_at) VALUES ($1, $2, $3, $4) RETURNING *',
+        [authorData.name, authorData.email, authorData.bio, authorData.created_at]
+    );
+    return rows[0];
+};
 
 module.exports = {
   getAuthorsService,
-  getAuthorsByIdService
+  getAuthorsByIdService,
+  postAuthorsService
 };
