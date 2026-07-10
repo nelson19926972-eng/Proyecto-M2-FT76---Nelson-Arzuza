@@ -40,20 +40,25 @@ ON CONFLICT (email) DO NOTHING;
  
 INSERT INTO posts (title, content, author_id, published)
 SELECT 'Introducción a Node.js', 'Node.js es un runtime de JavaScript...', 1, true
-WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 1);
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 1)
+  AND EXISTS (SELECT 1 FROM authors WHERE id = 1);
 
 INSERT INTO posts (title, content, author_id, published)
 SELECT 'PostgreSQL vs MySQL', 'Ambas bases de datos tienen ventajas...', 2, true
-WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 2);
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 2)
+  AND EXISTS (SELECT 1 FROM authors WHERE id = 2);
 
 INSERT INTO posts (title, content, author_id, published)
 SELECT 'APIs RESTful', 'REST es un estilo arquitectónico...', 1, true
-WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 3);
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 3)
+  AND EXISTS (SELECT 1 FROM authors WHERE id = 1);
 
 INSERT INTO posts (title, content, author_id, published)
 SELECT 'Manejo de errores en Express', 'El manejo apropiado de errores...', 3, false
-WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 4);
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 4)
+  AND EXISTS (SELECT 1 FROM authors WHERE id = 3);
 
 INSERT INTO posts (title, content, author_id, published)
 SELECT 'Async/Await explicado', 'Las promesas simplifican el código asíncrono...', 1, false
-WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 5);
+WHERE NOT EXISTS (SELECT 1 FROM posts WHERE id = 5)
+  AND EXISTS (SELECT 1 FROM authors WHERE id = 1);

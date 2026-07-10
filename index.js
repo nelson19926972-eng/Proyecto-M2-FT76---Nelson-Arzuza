@@ -1,8 +1,7 @@
 const { pool } = require("./src/config/db_conect")
 const { initializeDatabase } = require("./src/config/db_init")
+const { PORT } = require("./src/config/envs")
 const { server } = require("./src/server")
-const { loadEnvFile } = require("node:process")
-loadEnvFile()
 
 const startServer = async () => {
 
@@ -10,8 +9,8 @@ const startServer = async () => {
     await initializeDatabase()
     console.log('Conexión a la base de datos establecida correctamente')
 
-    server.listen(process.env.PORT, () => {
-    console.log('Servidor escuchando en el puerto ' + process.env.PORT)
+    server.listen(PORT, () => {
+    console.log('Servidor escuchando en el puerto ' + PORT)
 })
 
 }
