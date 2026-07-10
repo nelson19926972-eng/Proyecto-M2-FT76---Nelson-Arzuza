@@ -82,20 +82,24 @@ npm run dev
 
 1. Prepara tu proyecto localmente
 - Asegúrate de que tu proyecto tenga esta estructura mínima:
+```
 mi-api/
 ├── src/ (o index.js en la raíz)
 ├── package.json
 ├── .env (no se sube a git)
 ├── .gitignore
 └── README.md
+```
 
 2. Sube tu proyecto a GitHub
-bashgit init
-git add .
+```bash
+git init
+git add . 
 git commit -m "Primer commit - API lista para deploy"
 git branch -M main
 git remote add origin https://github.com/tu-usuario/mi-api.git
 git push -u origin main
+```
 
 3. Crea una cuenta en Railway
 - Ve a railway.app
