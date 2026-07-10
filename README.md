@@ -152,7 +152,7 @@ Por defecto, cada git push a la rama main dispara un nuevo deploy automáticamen
 
 ## Documentación AI
 
-1. CRUD ENDPOINTS
+1. EJECUCION DE LA SEED Y CRUD ENDPOINTS
 
 - Prompt:
 ![pregunta](/src/img/image.png)
