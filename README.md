@@ -4,7 +4,7 @@ Mini Blog es una API REST sencilla construida con Node.js y Express para gestion
 
 ## Deployment (OpenAPI Swagger UI)
 
-`https://proyecto-m2-ft76-nelson-arzuza-production.up.railway.app/api-docs`
+https://proyecto-m2-ft76-nelson-arzuza-production.up.railway.app/api-docs
 
 ## Requisitos
 
