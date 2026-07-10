@@ -146,7 +146,7 @@ Ve a la pestaña "Settings" del servicio
 En la sección "Networking", click en "Generate Domain"
 Railway te dará una URL tipo:
 
-https://mi-api-production.up.railway.app
+`https://mi-api-production.up.railway.app`
 
 9. Prueba tu API en producción
 Abrela en el link generado por Railway: `https://mi-api-production.up.railway.app`
