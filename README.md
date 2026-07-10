@@ -204,7 +204,7 @@ Por defecto, cada git push a la rama main dispara un nuevo deploy automáticamen
 ![código](/src/img/image-20.png)
 
 
-2. VALIDACIONES ENDPOINTS
+2. VALIDACIONES ENDPOINTS (MIDDLEWARES)
 
 - Prompt:
 ![pregunta](/src/img/image-21.png)
@@ -224,7 +224,7 @@ Por defecto, cada git push a la rama main dispara un nuevo deploy automáticamen
 ![respuesta](/src/img/image-27.png)
 
 
-3. SWAGGER UI
+3. SWAGGER UI (DOCUMENTACION OPENAPI UI)
 
 - Prompt:
 ![pregunta](/src/img/image-28.png)
