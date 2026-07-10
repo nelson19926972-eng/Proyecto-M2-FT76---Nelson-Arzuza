@@ -9,7 +9,7 @@ const swaggerSpec = {
     },
     servers: [
         {
-            url: process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : 'http://localhost:3000'
+            url: process.env.NODE_ENV === 'production' ? 'https://proyecto-m2-ft76-nelson-arzuza-production.up.railway.app' : 'http://localhost:3000'
         }
     ],
     tags: [
