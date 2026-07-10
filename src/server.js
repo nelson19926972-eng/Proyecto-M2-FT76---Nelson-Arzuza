@@ -12,7 +12,6 @@ server.use((req, res, next) => {
             timestamp: new Date().toISOString(),
             method: req.method,
             url: req.originalUrl || req.url,
-            from: req.headers.origin || req.headers.referer || 'unknown',
             status: res.statusCode,
             durationMs: Date.now() - start
         })
