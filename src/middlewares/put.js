@@ -62,7 +62,44 @@ const validatePostUpdateBody = (req, res, next) => {
   next();
 };
 
+const validateCommentUpdateBody = (req, res, next) => {
+  const { content, post_id, author_id, ...rest } = req.body || {};
+  const invalidFields = Object.keys(rest);
+
+  if (invalidFields.length > 0) {
+    return res.status(400).json({ status: 400, message: `Campos no permitidos para actualizar comentario: ${invalidFields.join(', ')}` });
+  }
+
+  const hasAnyField = [content, post_id, author_id].some((value) => value !== undefined);
+  if (!hasAnyField) {
+    return res.status(400).json({ status: 400, message: 'Debes enviar al menos un campo para actualizar el comentario' });
+  }
+
+  if (content !== undefined && (typeof content !== 'string' || content.trim() === '')) {
+    return res.status(400).json({ status: 400, message: 'El contenido del comentario debe ser un texto válido' });
+  }
+
+  if (post_id !== undefined) {
+    const parsedPostId = Number(post_id);
+    if (!Number.isInteger(parsedPostId) || parsedPostId <= 0) {
+      return res.status(400).json({ status: 400, message: 'El post_id del comentario debe ser un número entero válido' });
+    }
+    req.body.post_id = parsedPostId;
+  }
+
+  if (author_id !== undefined) {
+    const parsedAuthorId = Number(author_id);
+    if (!Number.isInteger(parsedAuthorId) || parsedAuthorId <= 0) {
+      return res.status(400).json({ status: 400, message: 'El author_id del comentario debe ser un número entero válido' });
+    }
+    req.body.author_id = parsedAuthorId;
+  }
+
+  next();
+};
+
 module.exports = {
   validateAuthorUpdateBody,
-  validatePostUpdateBody
+  validatePostUpdateBody,
+  validateCommentUpdateBody
 };

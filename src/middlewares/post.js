@@ -40,7 +40,30 @@ const validatePostBody = (req, res, next) => {
   next();
 };
 
+const validateCommentBody = (req, res, next) => {
+  const { content, post_id, author_id } = req.body || {};
+
+  if (typeof content !== 'string' || content.trim() === '') {
+    return res.status(400).json({ status: 400, message: 'El contenido del comentario es obligatorio' });
+  }
+
+  const parsedPostId = Number(post_id);
+  if (!Number.isInteger(parsedPostId) || parsedPostId <= 0) {
+    return res.status(400).json({ status: 400, message: 'El post_id del comentario debe ser un número entero válido' });
+  }
+
+  const parsedAuthorId = Number(author_id);
+  if (!Number.isInteger(parsedAuthorId) || parsedAuthorId <= 0) {
+    return res.status(400).json({ status: 400, message: 'El author_id del comentario debe ser un número entero válido' });
+  }
+
+  req.body.post_id = parsedPostId;
+  req.body.author_id = parsedAuthorId;
+  next();
+};
+
 module.exports = {
   validateAuthorBody,
-  validatePostBody
+  validatePostBody,
+  validateCommentBody
 };

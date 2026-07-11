@@ -3,9 +3,9 @@ const swaggerUi = require('swagger-ui-express')
 const swaggerSpec = {
     openapi: '3.0.0',
     info: {
-        title: 'API de Autores y Posts',
+        title: 'API de Autores, Posts y Comentarios',
         version: '1.0.0',
-        description: 'Documentación Swagger para la API de autores y posts.'
+        description: 'Documentación Swagger para gestionar autores, posts y comentarios.'
     },
     servers: [
         {
@@ -24,8 +24,56 @@ const swaggerSpec = {
         {
             name: 'Posts',
             description: 'Operaciones relacionadas con posts'
+        },
+        {
+            name: 'Comentarios',
+            description: 'Operaciones relacionadas con comentarios'
         }
     ],
+    components: {
+        schemas: {
+            Author: {
+                type: 'object',
+                properties: {
+                    id: { type: 'integer' },
+                    name: { type: 'string' },
+                    email: { type: 'string' },
+                    bio: { type: 'string' },
+                    created_at: { type: 'string', format: 'date-time' }
+                }
+            },
+            Post: {
+                type: 'object',
+                properties: {
+                    id: { type: 'integer' },
+                    title: { type: 'string' },
+                    content: { type: 'string' },
+                    author_id: { type: 'integer' },
+                    published: { type: 'boolean' },
+                    created_at: { type: 'string', format: 'date-time' }
+                }
+            },
+            Comment: {
+                type: 'object',
+                properties: {
+                    id: { type: 'integer' },
+                    post_id: { type: 'integer' },
+                    author_id: { type: 'integer' },
+                    content: { type: 'string' },
+                    created_at: { type: 'string', format: 'date-time' }
+                }
+            },
+            CommentCreate: {
+                type: 'object',
+                required: ['post_id', 'author_id', 'content'],
+                properties: {
+                    post_id: { type: 'integer' },
+                    author_id: { type: 'integer' },
+                    content: { type: 'string' }
+                }
+            }
+        }
+    },
     paths: {
         '/': {
             get: {
@@ -195,6 +243,133 @@ const swaggerSpec = {
                 responses: {
                     200: { description: 'Posts del autor obtenidos correctamente' },
                     404: { description: 'No se encontraron posts para este autor' }
+                }
+            }
+        },
+        '/comments': {
+            get: {
+                tags: ['Comentarios'],
+                summary: 'Listar comentarios',
+                responses: {
+                    200: { description: 'Lista de comentarios obtenida correctamente' }
+                }
+            },
+            post: {
+                tags: ['Comentarios'],
+                summary: 'Crear comentario',
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                $ref: '#/components/schemas/CommentCreate'
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    201: { description: 'Comentario creado correctamente' }
+                }
+            }
+        },
+        '/comments/post/{postId}': {
+            get: {
+                tags: ['Comentarios'],
+                summary: 'Obtener comentarios por post',
+                parameters: [
+                    {
+                        name: 'postId',
+                        in: 'path',
+                        required: true,
+                        schema: { type: 'integer' }
+                    }
+                ],
+                responses: {
+                    200: { description: 'Comentarios del post obtenidos correctamente' },
+                    404: { description: 'No se encontraron comentarios para este post' }
+                }
+            }
+        },
+        '/comments/author/{authorId}': {
+            get: {
+                tags: ['Comentarios'],
+                summary: 'Obtener comentarios por autor',
+                parameters: [
+                    {
+                        name: 'authorId',
+                        in: 'path',
+                        required: true,
+                        schema: { type: 'integer' }
+                    }
+                ],
+                responses: {
+                    200: { description: 'Comentarios del autor obtenidos correctamente' },
+                    404: { description: 'No se encontraron comentarios para este autor' }
+                }
+            }
+        },
+        '/comments/{id}': {
+            get: {
+                tags: ['Comentarios'],
+                summary: 'Obtener comentario por ID',
+                parameters: [
+                    {
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: { type: 'integer' }
+                    }
+                ],
+                responses: {
+                    200: { description: 'Comentario encontrado' },
+                    404: { description: 'Comentario no encontrado' }
+                }
+            },
+            put: {
+                tags: ['Comentarios'],
+                summary: 'Actualizar comentario',
+                parameters: [
+                    {
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: { type: 'integer' }
+                    }
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    content: { type: 'string' },
+                                    post_id: { type: 'integer' },
+                                    author_id: { type: 'integer' }
+                                }
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    200: { description: 'Comentario actualizado correctamente' },
+                    404: { description: 'Comentario no encontrado' }
+                }
+            },
+            delete: {
+                tags: ['Comentarios'],
+                summary: 'Eliminar comentario',
+                parameters: [
+                    {
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: { type: 'integer' }
+                    }
+                ],
+                responses: {
+                    200: { description: 'Comentario eliminado correctamente' },
+                    404: { description: 'Comentario no encontrado' }
                 }
             }
         },
