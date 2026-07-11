@@ -238,7 +238,20 @@ Por defecto, cada git push a la rama main dispara un nuevo deploy automáticamen
 ![código](/src/img/image-30.png)
 
 
-4. PEQUEÑAS MODIFICACIONES
+4. EXTRACREDIT
+
+- Prompt:
+![pregunta](/src/img/imagex.png)
+- Res AI:
+![respuesta](/src/img/image-x1.png)
+![respuesta](/src/img/image-x2.png)
+
+- Prompt:
+![pregunta](/src/img/image-x3.png)
+![respuesta](/src/img/image-x4.png)
+
+
+5. PEQUEÑAS MODIFICACIONES
 - Tambien pedi para la ia algunas pequeñas modificacion de seguridad
 para que la aplicacion no se colgara, como por ejemplo:
 que al iniciar la base de datos no me duplicara los insert en las tablas
