@@ -253,7 +253,13 @@ const swaggerSpec = {
                     content: {
                         'application/json': {
                             schema: {
-                                $ref: '#/components/schemas/CommentCreate'
+                                type: 'object',
+                                required: ['post_id', 'author_id', 'content'],
+                                properties: {
+                                    post_id: { type: 'integer' },
+                                    author_id: { type: 'integer' },
+                                    content: { type: 'string' }
+                                }
                             }
                         }
                     }
