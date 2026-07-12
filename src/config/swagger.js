@@ -62,15 +62,6 @@ const swaggerSpec = {
                     content: { type: 'string' },
                     created_at: { type: 'string', format: 'date-time' }
                 }
-            },
-            CommentCreate: {
-                type: 'object',
-                required: ['post_id', 'author_id', 'content'],
-                properties: {
-                    post_id: { type: 'integer' },
-                    author_id: { type: 'integer' },
-                    content: { type: 'string' }
-                }
             }
         }
     },
