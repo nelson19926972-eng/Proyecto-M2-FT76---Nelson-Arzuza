@@ -3,10 +3,9 @@ const { welcomeController } = require('../controllers/bienvenida_controller')
 const { getAuthorsController, getAuthorsByIdController, postAuthorsController, putAuthorsController, deleteAuthorsController } = require('../controllers/authors_controller')
 const { getPostsController, getPostByIdController, getPostsByAuthorController, postPostController, putPostController, deletePostController } = require('../controllers/posts_controllers')
 const { getCommentsController, getCommentByIdController, getCommentsByPostController, getCommentsByAuthorController, postCommentController, putCommentController, deleteCommentController } = require('../controllers/comments_controller')
-const { validateIdParam } = require('../middlewares/get')
-const { validateAuthorBody, validatePostBody, validateCommentBody } = require('../middlewares/post')
-const { validateAuthorUpdateBody, validatePostUpdateBody, validateCommentUpdateBody } = require('../middlewares/put')
-const { validateDeleteIdParam } = require('../middlewares/delete')
+const { validateIdParam, validateDeleteIdParam } = require('../middlewares/params')
+const { validateAuthorBody, validatePostBody, validateCommentBody } = require('../middlewares/bodyValidators')
+const { validateAuthorUpdateBody, validatePostUpdateBody, validateCommentUpdateBody } = require('../middlewares/updateValidators')
 const router = Router()
 
 

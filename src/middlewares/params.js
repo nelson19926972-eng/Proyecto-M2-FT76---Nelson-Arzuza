@@ -14,6 +14,9 @@ const validateIdParam = (paramName) => (req, res, next) => {
   next();
 };
 
+const validateDeleteIdParam = (req, res, next) => validateIdParam('id')(req, res, next);
+
 module.exports = {
-  validateIdParam
+  validateIdParam,
+  validateDeleteIdParam
 };

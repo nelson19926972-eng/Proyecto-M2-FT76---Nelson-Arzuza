@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { validateAuthorBody } from '../src/middlewares/post.js';
-import { validateIdParam } from '../src/middlewares/get.js';
+import { validateAuthorBody } from '../src/middlewares/bodyValidators.js';
+import { validateIdParam } from '../src/middlewares/params.js';
 
 const createResponse = () => {
   const res = {

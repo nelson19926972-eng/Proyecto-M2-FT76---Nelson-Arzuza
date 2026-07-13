@@ -1,7 +1,7 @@
 const { describe, expect, it } = require('vitest');
 
-const { validateAuthorBody } = require('../src/middlewares/post');
-const { validateIdParam } = require('../src/middlewares/get');
+const { validateAuthorBody } = require('../src/middlewares/bodyValidators');
+const { validateIdParam } = require('../src/middlewares/params');
 
 const createResponse = () => {
   const res = {
