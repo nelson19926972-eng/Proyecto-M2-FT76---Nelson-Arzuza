@@ -65,6 +65,7 @@ describe('API de comentarios', () => {
   });
 
   it('obtiene los comentarios de un post', async () => {
+    pool.query.mockResolvedValueOnce({ rows: [{ id: 3 }] });
     pool.query.mockResolvedValue({
       rows: [
         {
@@ -89,6 +90,18 @@ describe('API de comentarios', () => {
       status: 200,
       message: 'Comentarios del post obtenidos correctamente',
       data: [expect.objectContaining({ id: 5, post_id: 3 })]
+    });
+  });
+
+  it('indica cuando el post solicitado no existe', async () => {
+    pool.query.mockResolvedValueOnce({ rows: [] });
+
+    const response = await request(server).get('/comments/post/999');
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      status: 404,
+      message: 'No existe ningun posts con este id'
     });
   });
 

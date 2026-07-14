@@ -7,6 +7,7 @@ const {
   putCommentService,
   deleteCommentService
 } = require('../services/comments_services');
+const { getPostByIdService } = require('../services/posts_services');
 
 const getCommentsController = async (req, res) => {
   try {
@@ -51,6 +52,11 @@ const getCommentsByPostController = async (req, res) => {
   }
 
   try {
+    const post = await getPostByIdService(postId);
+    if (!post) {
+      return res.status(404).json({ status: 404, message: 'No existe ningun posts con este id' });
+    }
+
     const comments = await getCommentsByPostService(postId);
     if (comments.length > 0) {
       res.status(200).json({ status: 200, message: 'Comentarios del post obtenidos correctamente', data: comments });
