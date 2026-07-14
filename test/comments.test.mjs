@@ -178,12 +178,25 @@ describe('API de comentarios', () => {
       .put('/comments/3')
       .send({ content: 'Actualizado' });
 
+    expect(pool.query).toHaveBeenLastCalledWith(
+      'UPDATE comments SET content = $1 WHERE id = $2 RETURNING *',
+      ['Actualizado', 3]
+    );
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({
       status: 200,
       message: 'Comentario actualizado correctamente',
       data: expect.objectContaining({ content: 'Actualizado' })
     });
+  });
+
+  it('no permite cambiar el post de un comentario', async () => {
+    const response = await request(server)
+      .put('/comments/3')
+      .send({ post_id: 2 });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toContain('Campos no permitidos');
   });
 
   it('elimina un comentario existente', async () => {

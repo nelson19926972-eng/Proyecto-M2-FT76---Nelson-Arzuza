@@ -79,7 +79,7 @@ const putCommentService = async (id, commentData = {}) => {
     return null;
   }
 
-  const allowedFields = ['content', 'post_id', 'author_id', 'created_at'];
+  const allowedFields = ['content'];
   const fields = [];
   const values = [];
 

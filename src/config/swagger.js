@@ -199,6 +199,7 @@ const swaggerSpec = {
                         'application/json': {
                             schema: {
                                 type: 'object',
+                                required: ['author_id', 'title', 'content'],
                                 properties: {
                                     author_id: { type: 'integer' },
                                     title: { type: 'string' },
@@ -340,9 +341,7 @@ const swaggerSpec = {
                             schema: {
                                 type: 'object',
                                 properties: {
-                                    content: { type: 'string' },
-                                    post_id: { type: 'integer' },
-                                    author_id: { type: 'integer' }
+                                    content: { type: 'string' }
                                 }
                             }
                         }
@@ -405,7 +404,6 @@ const swaggerSpec = {
                             schema: {
                                 type: 'object',
                                 properties: {
-                                    author_id: { type: 'integer' },
                                     title: { type: 'string' },
                                     content: { type: 'string' },
                                     published: { type: 'boolean' }

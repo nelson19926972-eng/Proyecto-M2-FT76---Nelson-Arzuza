@@ -109,6 +109,15 @@ describe('API de posts', () => {
     });
   });
 
+  it('requiere el id del autor para crear un post', async () => {
+    const response = await request(server)
+      .post('/posts')
+      .send({ title: 'Nuevo', content: 'Contenido' });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toContain('author_id');
+  });
+
   it('crea un post correctamente', async () => {
     pool.query.mockResolvedValueOnce({
       rows: [{ id: 3, title: 'Nuevo', content: 'Contenido', author_id: 7, published: true, created_at: '2024-01-04T00:00:00.000Z' }]
@@ -129,18 +138,31 @@ describe('API de posts', () => {
   it('actualiza un post existente', async () => {
     pool.query
       .mockResolvedValueOnce({ rows: [{ id: 3 }] })
-      .mockResolvedValueOnce({ rows: [{ id: 3, title: 'Actualizado', content: 'Texto', author_id: 1, published: false, created_at: '2024-01-04T00:00:00.000Z' }] });
+      .mockResolvedValueOnce({ rows: [{ id: 3, title: 'Título actualizado', content: 'Contenido actualizado', author_id: 1, published: false, created_at: '2024-01-04T00:00:00.000Z' }] });
 
     const response = await request(server)
       .put('/posts/3')
-      .send({ title: 'Actualizado', published: false });
+      .send({ title: 'Título actualizado', content: 'Contenido actualizado', published: false });
 
+    expect(pool.query).toHaveBeenLastCalledWith(
+      'UPDATE posts SET title = $1, content = $2, published = $3 WHERE id = $4 RETURNING *',
+      ['Título actualizado', 'Contenido actualizado', false, 3]
+    );
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({
       status: 200,
       message: 'Post actualizado correctamente',
-      data: expect.objectContaining({ title: 'Actualizado', published: false })
+      data: expect.objectContaining({ title: 'Título actualizado', content: 'Contenido actualizado', published: false })
     });
+  });
+
+  it('no permite cambiar el autor del post', async () => {
+    const response = await request(server)
+      .put('/posts/3')
+      .send({ author_id: 2 });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toContain('Campos no permitidos');
   });
 
   it('elimina un post existente', async () => {

@@ -49,7 +49,7 @@ const putPostService = async (id, postData = {}) => {
     return null;
   }
 
-  const allowedFields = ['title', 'content', 'author_id', 'published', 'created_at'];
+  const allowedFields = ['title', 'content', 'published'];
   const fields = [];
   const values = [];
 
