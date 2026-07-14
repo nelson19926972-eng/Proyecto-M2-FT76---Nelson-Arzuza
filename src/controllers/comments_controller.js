@@ -11,6 +11,11 @@ const {
 const getCommentsController = async (req, res) => {
   try {
     const comments = await getCommentsService();
+
+    if (!comments || comments.length === 0) {
+      return res.status(200).json({ status: 200, message: 'No se encontro ningun comentario', data: [] });
+    }
+
     res.status(200).json({ status: 200, message: 'Comentarios obtenidos correctamente', data: comments });
   } catch (error) {
     console.error('Error al obtener los comentarios:', error);

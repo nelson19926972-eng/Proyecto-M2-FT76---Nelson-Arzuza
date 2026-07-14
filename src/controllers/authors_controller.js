@@ -4,6 +4,11 @@ const { getAuthorsService, getAuthorsByIdService, postAuthorsService, putAuthors
 const getAuthorsController = async (req, res) => {
     try {
         const authors = await getAuthorsService();
+
+        if (!authors || authors.length === 0) {
+            return res.status(200).json({ status: 200, message: 'No se encontro ningun autor', data: [] });
+        }
+
         res.status(200).json({ status: 200, message: 'Autores obtenidos correctamente', data: authors });
     } catch (error) {
         console.error('Error al obtener los autores:', error);

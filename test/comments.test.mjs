@@ -17,6 +17,19 @@ describe('API de comentarios', () => {
     pool.query = originalQuery;
   });
 
+  it('devuelve un mensaje específico cuando no hay comentarios registrados', async () => {
+    pool.query.mockResolvedValue({ rows: [] });
+
+    const response = await request(server).get('/comments');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      status: 200,
+      message: 'No se encontro ningun comentario',
+      data: []
+    });
+  });
+
   it('obtiene la lista de comentarios', async () => {
     pool.query.mockResolvedValue({
       rows: [

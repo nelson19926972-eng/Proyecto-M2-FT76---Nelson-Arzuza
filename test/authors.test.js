@@ -28,6 +28,19 @@ describe('API de autores', () => {
     });
   });
 
+  it('devuelve un mensaje específico cuando no hay autores registrados', async () => {
+    getAuthorsService.mockResolvedValue([]);
+
+    const response = await request(server).get('/authors');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      status: 200,
+      message: 'No se encontro ningun autor',
+      data: []
+    });
+  });
+
   it('obtiene la lista de autores desde el servicio', async () => {
     getAuthorsService.mockResolvedValue([
       { id: 1, name: 'Ana', email: 'ana@example.com', bio: 'Desarrolladora', created_at: '2024-01-01T00:00:00.000Z' }

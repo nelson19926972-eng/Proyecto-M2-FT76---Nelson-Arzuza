@@ -10,6 +10,11 @@ const {
 const getPostsController = async (req, res) => {
   try {
     const posts = await getPostsService();
+
+    if (!posts || posts.length === 0) {
+      return res.status(200).json({ status: 200, message: 'No se encontro ningun post', data: [] });
+    }
+
     res.status(200).json({ status: 200, message: 'Posts obtenidos correctamente', data: posts });
   } catch (error) {
     console.error('Error al obtener los posts:', error);

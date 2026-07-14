@@ -17,6 +17,19 @@ describe('API de posts', () => {
     pool.query = originalQuery;
   });
 
+  it('devuelve un mensaje específico cuando no hay posts registrados', async () => {
+    pool.query.mockResolvedValue({ rows: [] });
+
+    const response = await request(server).get('/posts');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      status: 200,
+      message: 'No se encontro ningun post',
+      data: []
+    });
+  });
+
   it('obtiene la lista de posts', async () => {
     pool.query.mockResolvedValue({
       rows: [
