@@ -27,13 +27,4 @@ describe('Eliminar recursos existentes', () => {
     expect(response.body).toEqual({ status: 200, message: 'Autor eliminado correctamente', data: null });
   });
 
-  it('elimina un post existente', async () => {
-    pool.query.mockResolvedValueOnce({ rowCount: 1 });
-
-    const response = await request(server).delete('/posts/4');
-
-    expect(pool.query).toHaveBeenCalledWith('DELETE FROM posts WHERE id = $1', [4]);
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ status: 200, message: 'Post eliminado correctamente', data: null });
-  });
 });

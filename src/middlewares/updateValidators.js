@@ -1,3 +1,9 @@
+const {
+  isNonEmptyString,
+  isValidEmail,
+  parsePositiveInteger
+} = require('./validationHelpers');
+
 const validateAuthorUpdateBody = (req, res, next) => {
   const { name, email, bio, ...rest } = req.body || {};
   const invalidFields = Object.keys(rest);
@@ -11,11 +17,11 @@ const validateAuthorUpdateBody = (req, res, next) => {
     return res.status(400).json({ status: 400, message: 'Debes enviar al menos un campo para actualizar el autor' });
   }
 
-  if (name !== undefined && (typeof name !== 'string' || name.trim() === '')) {
+  if (name !== undefined && !isNonEmptyString(name)) {
     return res.status(400).json({ status: 400, message: 'El nombre del autor debe ser un texto válido' });
   }
 
-  if (email !== undefined && (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))) {
+  if (email !== undefined && !isValidEmail(email)) {
     return res.status(400).json({ status: 400, message: 'El email del autor no es válido' });
   }
 
@@ -39,17 +45,17 @@ const validatePostUpdateBody = (req, res, next) => {
     return res.status(400).json({ status: 400, message: 'Debes enviar al menos un campo para actualizar el post' });
   }
 
-  if (title !== undefined && (typeof title !== 'string' || title.trim() === '')) {
+  if (title !== undefined && !isNonEmptyString(title)) {
     return res.status(400).json({ status: 400, message: 'El título del post debe ser un texto válido' });
   }
 
-  if (content !== undefined && (typeof content !== 'string' || content.trim() === '')) {
+  if (content !== undefined && !isNonEmptyString(content)) {
     return res.status(400).json({ status: 400, message: 'El contenido del post debe ser un texto válido' });
   }
 
   if (author_id !== undefined) {
-    const parsedAuthorId = Number(author_id);
-    if (!Number.isInteger(parsedAuthorId) || parsedAuthorId <= 0) {
+    const parsedAuthorId = parsePositiveInteger(author_id);
+    if (parsedAuthorId === null) {
       return res.status(400).json({ status: 400, message: 'El author_id del post debe ser un número entero válido' });
     }
     req.body.author_id = parsedAuthorId;
@@ -75,21 +81,21 @@ const validateCommentUpdateBody = (req, res, next) => {
     return res.status(400).json({ status: 400, message: 'Debes enviar al menos un campo para actualizar el comentario' });
   }
 
-  if (content !== undefined && (typeof content !== 'string' || content.trim() === '')) {
+  if (content !== undefined && !isNonEmptyString(content)) {
     return res.status(400).json({ status: 400, message: 'El contenido del comentario debe ser un texto válido' });
   }
 
   if (post_id !== undefined) {
-    const parsedPostId = Number(post_id);
-    if (!Number.isInteger(parsedPostId) || parsedPostId <= 0) {
+    const parsedPostId = parsePositiveInteger(post_id);
+    if (parsedPostId === null) {
       return res.status(400).json({ status: 400, message: 'El post_id del comentario debe ser un número entero válido' });
     }
     req.body.post_id = parsedPostId;
   }
 
   if (author_id !== undefined) {
-    const parsedAuthorId = Number(author_id);
-    if (!Number.isInteger(parsedAuthorId) || parsedAuthorId <= 0) {
+    const parsedAuthorId = parsePositiveInteger(author_id);
+    if (parsedAuthorId === null) {
       return res.status(400).json({ status: 400, message: 'El author_id del comentario debe ser un número entero válido' });
     }
     req.body.author_id = parsedAuthorId;

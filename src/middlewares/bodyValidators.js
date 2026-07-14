@@ -1,11 +1,17 @@
+const {
+  isNonEmptyString,
+  isValidEmail,
+  parsePositiveInteger
+} = require('./validationHelpers');
+
 const validateAuthorBody = (req, res, next) => {
   const { name, email, bio } = req.body || {};
 
-  if (typeof name !== 'string' || name.trim() === '') {
+  if (!isNonEmptyString(name)) {
     return res.status(400).json({ status: 400, message: 'El nombre del autor es obligatorio' });
   }
 
-  if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+  if (!isValidEmail(email)) {
     return res.status(400).json({ status: 400, message: 'El email del autor no es válido' });
   }
 
@@ -19,16 +25,16 @@ const validateAuthorBody = (req, res, next) => {
 const validatePostBody = (req, res, next) => {
   const { title, content, author_id, published } = req.body || {};
 
-  if (typeof title !== 'string' || title.trim() === '') {
+  if (!isNonEmptyString(title)) {
     return res.status(400).json({ status: 400, message: 'El título del post es obligatorio' });
   }
 
-  if (typeof content !== 'string' || content.trim() === '') {
+  if (!isNonEmptyString(content)) {
     return res.status(400).json({ status: 400, message: 'El contenido del post es obligatorio' });
   }
 
-  const parsedAuthorId = Number(author_id);
-  if (!Number.isInteger(parsedAuthorId) || parsedAuthorId <= 0) {
+  const parsedAuthorId = parsePositiveInteger(author_id);
+  if (parsedAuthorId === null) {
     return res.status(400).json({ status: 400, message: 'El author_id del post debe ser un número entero válido' });
   }
 
@@ -43,17 +49,17 @@ const validatePostBody = (req, res, next) => {
 const validateCommentBody = (req, res, next) => {
   const { content, post_id, author_id } = req.body || {};
 
-  if (typeof content !== 'string' || content.trim() === '') {
+  if (!isNonEmptyString(content)) {
     return res.status(400).json({ status: 400, message: 'El contenido del comentario es obligatorio' });
   }
 
-  const parsedPostId = Number(post_id);
-  if (!Number.isInteger(parsedPostId) || parsedPostId <= 0) {
+  const parsedPostId = parsePositiveInteger(post_id);
+  if (parsedPostId === null) {
     return res.status(400).json({ status: 400, message: 'El post_id del comentario debe ser un número entero válido' });
   }
 
-  const parsedAuthorId = Number(author_id);
-  if (!Number.isInteger(parsedAuthorId) || parsedAuthorId <= 0) {
+  const parsedAuthorId = parsePositiveInteger(author_id);
+  if (parsedAuthorId === null) {
     return res.status(400).json({ status: 400, message: 'El author_id del comentario debe ser un número entero válido' });
   }
 

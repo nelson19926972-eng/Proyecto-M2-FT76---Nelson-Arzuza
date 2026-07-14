@@ -1,6 +1,7 @@
 const express = require('express')
 const { router } = require('./routers/rutas')
 const { swaggerUi, swaggerSpec } = require('./config/swagger')
+const { errorHandler } = require('./middlewares/errorHandler')
 const server = express()
 
 server.use(express.json())
@@ -25,6 +26,7 @@ server.get('/api-docs.json', (req, res) => {
 })
 server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 server.use(router)
+server.use(errorHandler)
 
 module.exports = {
     server
