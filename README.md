@@ -15,7 +15,7 @@ https://proyecto-m2-ft76-nelson-arzuza-production.up.railway.app/api-docs
 1. Clona el repositorio:
 
 ```bash
-git clone <repo-url>
+git clone <https://github.com/nelson19926972-eng/Proyecto-M2-FT76---Nelson-Arzuza.git>
 ```
 
 2. Instala dependencias:
@@ -24,11 +24,11 @@ git clone <repo-url>
 npm install
 ```
 
-3. Crea la base de datos:
+3. Crea la base de datos en posgrestsql:
 
 ```
 # adapta usuario y base de datos según tu entorno
-Usa progrestsql (recomendado)
+Usa progrestsql ya que si usas mysql u otra no funcionara la api
 ```
 
 4. Configura las variables de entorno creando un archivo `.env`
@@ -41,6 +41,7 @@ sigue la configuracion del `.env.example`
 ```bash
 npm run dev
 ```
+al iniciar la api ejecutara la seed.sql creando las tablas, haciendo las relaciones e insertando informacion de ejemplo
 
 6. Ejecuta las pruebas:
 
