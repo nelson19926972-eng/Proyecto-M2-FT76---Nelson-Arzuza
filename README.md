@@ -15,7 +15,7 @@ https://proyecto-m2-ft76-nelson-arzuza-production.up.railway.app/api-docs
 1. Clona el repositorio:
 
 ```bash
-git clone <https://github.com/nelson19926972-eng/Proyecto-M2-FT76---Nelson-Arzuza.git>
+git clone https://github.com/nelson19926972-eng/Proyecto-M2-FT76---Nelson-Arzuza.git
 ```
 
 2. Instala dependencias:
