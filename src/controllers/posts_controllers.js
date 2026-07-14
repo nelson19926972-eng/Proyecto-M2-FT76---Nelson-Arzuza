@@ -96,6 +96,10 @@ const postPostController = async (req, res) => {
       return res.status(409).json({ status: 409, message: error.message });
     }
 
+    if (error?.code === '23503') {
+      return res.status(404).json({ status: 404, message: 'El autor no se encuentra registrado' });
+    }
+
     res.status(500).json({ status: 500, message: 'Error al crear el post' });
   }
 };

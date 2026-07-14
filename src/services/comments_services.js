@@ -44,9 +44,26 @@ const postCommentService = async (commentData) => {
     ? commentData.created_at
     : new Date().toISOString();
 
+  const authorId = Number(commentData.author_id);
+  const postId = Number(commentData.post_id);
+
+  const authorResult = await pool.query('SELECT id FROM authors WHERE id = $1', [authorId]);
+  if (authorResult.rows.length === 0) {
+    const error = new Error('El autor no se encuentra registrado');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const postResult = await pool.query('SELECT id FROM posts WHERE id = $1', [postId]);
+  if (postResult.rows.length === 0) {
+    const error = new Error('El post no se encuentra registrado');
+    error.statusCode = 404;
+    throw error;
+  }
+
   const { rows } = await pool.query(
     'INSERT INTO comments (post_id, author_id, content, created_at) VALUES ($1, $2, $3, $4) RETURNING *',
-    [commentData.post_id, commentData.author_id, commentData.content, createdAt]
+    [postId, authorId, commentData.content, createdAt]
   );
   return rows[0];
 };

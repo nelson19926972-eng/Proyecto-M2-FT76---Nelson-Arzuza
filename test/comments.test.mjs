@@ -119,10 +119,43 @@ describe('API de comentarios', () => {
     });
   });
 
-  it('crea un comentario correctamente', async () => {
-    pool.query.mockResolvedValueOnce({
-      rows: [{ id: 3, post_id: 1, author_id: 2, content: 'Comentario nuevo', created_at: '2024-01-04T00:00:00.000Z' }]
+  it('devuelve 404 cuando el autor del comentario no existe', async () => {
+    pool.query.mockResolvedValueOnce({ rows: [] });
+
+    const response = await request(server)
+      .post('/comments')
+      .send({ post_id: '1', author_id: '999', content: 'Comentario nuevo' });
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      status: 404,
+      message: 'El autor no se encuentra registrado'
     });
+  });
+
+  it('devuelve 404 cuando el post del comentario no existe', async () => {
+    pool.query
+      .mockResolvedValueOnce({ rows: [{ id: 1 }] })
+      .mockResolvedValueOnce({ rows: [] });
+
+    const response = await request(server)
+      .post('/comments')
+      .send({ post_id: '999', author_id: '1', content: 'Comentario nuevo' });
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      status: 404,
+      message: 'El post no se encuentra registrado'
+    });
+  });
+
+  it('crea un comentario correctamente', async () => {
+    pool.query
+      .mockResolvedValueOnce({ rows: [{ id: 2 }] })
+      .mockResolvedValueOnce({ rows: [{ id: 1 }] })
+      .mockResolvedValueOnce({
+        rows: [{ id: 3, post_id: 1, author_id: 2, content: 'Comentario nuevo', created_at: '2024-01-04T00:00:00.000Z' }]
+      });
 
     const response = await request(server)
       .post('/comments')

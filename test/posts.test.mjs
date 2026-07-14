@@ -95,6 +95,20 @@ describe('API de posts', () => {
     });
   });
 
+  it('devuelve 404 con un mensaje claro cuando el autor del post no existe', async () => {
+    pool.query.mockRejectedValueOnce({ code: '23503' });
+
+    const response = await request(server)
+      .post('/posts')
+      .send({ title: 'Nuevo', content: 'Contenido', author_id: '999', published: true });
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      status: 404,
+      message: 'El autor no se encuentra registrado'
+    });
+  });
+
   it('crea un post correctamente', async () => {
     pool.query.mockResolvedValueOnce({
       rows: [{ id: 3, title: 'Nuevo', content: 'Contenido', author_id: 7, published: true, created_at: '2024-01-04T00:00:00.000Z' }]

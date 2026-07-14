@@ -89,6 +89,11 @@ const postCommentController = async (req, res) => {
     res.status(201).json({ status: 201, message: 'Comentario creado correctamente', data: newComment });
   } catch (error) {
     console.error('Error al crear el comentario:', error);
+
+    if (error?.statusCode === 404) {
+      return res.status(404).json({ status: 404, message: error.message });
+    }
+
     res.status(500).json({ status: 500, message: 'Error al crear el comentario' });
   }
 };
